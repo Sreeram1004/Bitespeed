@@ -1,0 +1,37 @@
+version: "3.8"
+services:
+  identify-service:
+    build:
+      context: ./identify_services
+    ports:
+      - "3000:3000"
+    environment:
+      DB_USER: "${DB_USER}"
+      DB_PASS: "${DB_PASS}"
+      DB_HOST: "${DB_HOST}"
+      DB_PORT: "${DB_PORT}"
+      DB_NAME: db
+    depends_on:
+      - db
+    networks:
+      - blog-network
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: "${DB_USER}"
+      POSTGRES_PASSWORD: "${DB_PASS}"
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - blog-network
+
+networks:
+  blog-network:
+    driver: bridge
+
+volumes:
+  db_data:
