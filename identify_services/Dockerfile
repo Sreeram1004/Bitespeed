@@ -1,7 +1,7 @@
 FROM node:16 AS build
 WORKDIR /app
 COPY package*.json ./
-RUN npm ci --omit=dev
+RUN npm install
 COPY . .
 
 # Stage 2: Run
